@@ -1,0 +1,13 @@
+<h1>Google Base</h1>
+<% form_for :taxon_map, :url => { :controller => :taxon_mapper, :action => "update" } do |f| %>
+<% @taxons.each do |taxon| -%>
+  <p>
+    <%= taxon.name %>:
+    <%= text_field(:tax_id, taxon.id, :value => taxon.taxon_map.product_type) %>
+    <%= text_field(:priority, taxon.id, :value => taxon.taxon_map.priority.to_s) %>
+  </p>
+<% end -%>
+<%= submit_tag 'Update' %>
+<% end %>
+
+<%= debug(@products) %>

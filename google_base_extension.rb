@@ -3,16 +3,19 @@
 
 class GoogleBaseExtension < Spree::Extension
   version "1.0"
-  description "Describe your extension here"
-  url "http://yourwebsite.com/google_base"
+  description "Google Base Extension"
+  url "http://spreehq.org"
 
-  # Please use google_base/config/routes.rb instead for extension routes.
-
-  # def self.require_gems(config)
-  #   config.gem "gemname-goes-here", :version => '1.2.3'
-  # end
-  
   def activate
-    # admin.tabs.add "Google Base", "/admin/google_base", :after => "Layouts", :visibility => [:all]
+    Admin::ConfigurationsController.class_eval do
+      before_filter :add_taxon_map_link, :only => :index
+      def add_taxon_map_link
+        @extension_links << {:link => admin_taxon_mapper_index_url, :link_text => 'Google Base', :description => 'Google Base'}
+      end
+    end
+
+    Taxon.class_eval do
+      has_one :taxon_map
+    end
   end
 end

@@ -1,3 +1,5 @@
+require 'net/ftp'
+
 namespace :db do
   desc "Bootstrap your database for Spree."
   task :bootstrap  => :environment do
@@ -25,10 +27,30 @@ namespace :spree do
       end
       task :generate => :environment do
         results = _build_xml
-        puts results
+        File.open("#{SPREE_ROOT}/public/google_base.xml", "w") do |io|
+          io.puts(results)
+        end
+      end
+      task :transfer => :environment do
+        ftp = Net::FTP.new('uploads.google.com')
+        ftp.login(user = "*", passwd = "*")
+        ftp.putfile("{SPREE_ROOT}/public/google_base.xml", 'test.xml')
+        ftp.quit() 
       end
     end
   end
+end
+
+def _get_product_type(product)
+  product_type = ''
+  priority = 1000
+  product.taxons.each do |taxon|
+    if taxon.taxon_map.priority
+      priority = taxon.taxon_map.priority
+      product_type = taxon.taxon_map.product_type
+    end
+  end
+  product_type
 end
 
 def _build_xml
@@ -39,32 +61,15 @@ def _build_xml
       Product.find(:all).each do |product|
         xml.item {
           xml.id product.sku.to_s
-          xml.link ''+product.permalink #add root
+          xml.link 'public_root' + product.permalink
           xml.title product.name
           xml.description product.description
           xml.price product.master_price
           xml.condition 'New'
-          #Recommended
-          #xml.brand 'brand'
-          #xml.image_link 'image_link'
-          #xml.isbn 'isbn'
-          #xml.mpn 'mpn'
-          #xml.upc 'upc'
-          #xml.weight 'weight'
-          #Optional
-          #xml.color 'color'
-          #xml.expiration_date 'expiration_date'
-          #xml.height 'height'
-          #xml.length 'length'
-          #xml.model_number 'model_number'
-          #xml.payment_accepted 'payment_accepted'
-          #xml.payment_notes 'payment_notes'
-          #xml.price_type 'price_type'
-          #xml.product_type 'product_type' #map to category
-          #xml.quantity 'quantity'
-          #xml.shipping 'shipping'
-          #xml.size 'size'
-          #xml.tax 'tax'
+          xml.product_type _get_product_type(product)
+          xml.image 'public_root' + product.images.first.attachment.url(:product)
+          #others: xml.brand, xml.isbn, xml.mpn, xml.upc, xml.weight, xml.color, xml.height, xml.length,
+          #xml.payment_accepted, xml.payment_notes, xml.price_type, xml.quantity, xml.shipping, xml.size, xml.tax
         }
       end
     }
