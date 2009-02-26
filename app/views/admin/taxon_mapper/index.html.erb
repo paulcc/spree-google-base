@@ -1,13 +1,22 @@
-<h1>Google Base</h1>
+<% content_for :head do -%>
+<%= stylesheet_link_tag 'google_base.css' %>
+<% end -%>
+
+<div id="google_base_map">
+<h1>Google Base Taxonomy Mapping</h1>
 <% form_for :taxon_map, :url => { :controller => :taxon_mapper, :action => "update" } do |f| %>
+  <div class="headers">
+    <label for="header">Taxon</label>
+    <div class="priority">Priority</div>
+    <div class="category">Category</div>
+  </div>    
 <% @taxons.each do |taxon| -%>
   <p>
-    <%= taxon.name %>:
-    <%= text_field(:tax_id, taxon.id, :value => taxon.taxon_map.product_type) %>
-    <%= text_field(:priority, taxon.id, :value => taxon.taxon_map.priority.to_s) %>
+    <label for="<%= taxon.name %>"><%= taxon.name %></label>
+    <%= text_field(:priority, taxon.id, :value => taxon.taxon_map.priority.to_s, :class => 'priority') %>
+    <%= text_field(:tax_id, taxon.id, :value => taxon.taxon_map.product_type, :class => 'category') %>
   </p>
 <% end -%>
 <%= submit_tag 'Update' %>
 <% end %>
-
-<%= debug(@products) %>
+</div>

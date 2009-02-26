@@ -33,8 +33,8 @@ namespace :spree do
       end
       task :transfer => :environment do
         ftp = Net::FTP.new('uploads.google.com')
-        ftp.login(user = "*", passwd = "*")
-        ftp.putfile("{SPREE_ROOT}/public/google_base.xml", 'test.xml')
+        ftp.login('', '')
+        ftp.put("#{SPREE_ROOT}/public/google_base.xml", 'google_base_test.xml')
         ftp.quit() 
       end
     end
@@ -56,22 +56,33 @@ end
 def _build_xml
   returning '' do |output|
     xml = Builder::XmlMarkup.new(:target => output, :indent => 2)
-    xml.instruct! :xml, :version => "1.0", :encoding => "UTF-9"
-    xml.urlset( :xmlns => "http://www.sitemaps.org/schemas/sitemap/0.9" ) {
-      Product.find(:all).each do |product|
-        xml.item {
-          xml.id product.sku.to_s
-          xml.link 'public_root' + product.permalink
-          xml.title product.name
-          xml.description product.description
-          xml.price product.master_price
-          xml.condition 'New'
-          xml.product_type _get_product_type(product)
-          xml.image 'public_root' + product.images.first.attachment.url(:product)
+    xml.instruct! :xml, :version => "1.0"
+    xml.rss( :version => "2.0" ) {
+      xml.channel {
+        xml.title 'Spree Demo Site'
+        xml.link 'http://demo.spreehq.org/'
+        xml.description 'Spree Demo'
+        Product.find(:all).each do |product|  
+          xml.item {
+            xml.title product.name
+            xml.link 'http://demo.spreehq.org/products/' + product.permalink
+            xml.description product.description
+            xml.price product.master_price
+          }
+        end
+      }
+    }
+    #xml.urlset( :xmlns => "http://www.sitemaps.org/schemas/sitemap/0.9" ) {
+    #  Product.find(:all).each do |product|
+    #    xml.item {
+    #      xml.id product.sku.to_s
+    #      xml.condition 'New'
+    #      xml.product_type _get_product_type(product)
+    #      xml.image_link 'public_root' + product.images.first.attachment.url(:product)
           #others: xml.brand, xml.isbn, xml.mpn, xml.upc, xml.weight, xml.color, xml.height, xml.length,
           #xml.payment_accepted, xml.payment_notes, xml.price_type, xml.quantity, xml.shipping, xml.size, xml.tax
-        }
-      end
-    }
+    #    }
+    #  end
+    #}
   end
 end
