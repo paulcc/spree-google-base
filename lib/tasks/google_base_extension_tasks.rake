@@ -26,7 +26,7 @@ namespace :spree do
         end
       end
       task :generate => :environment do
-        results = _build_xml
+        results = '<?xml version="1.0"?>' + "\n" + '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">' + "\n" + _filter_xml(_build_xml) + '</rss>'
         File.open("#{SPREE_ROOT}/public/google_base.xml", "w") do |io|
           io.puts(results)
         end
@@ -53,36 +53,31 @@ def _get_product_type(product)
   product_type
 end
 
+def _filter_xml(output)
+  output.gsub('price', 'g:price')
+end
+  
 def _build_xml
   returning '' do |output|
-    xml = Builder::XmlMarkup.new(:target => output, :indent => 2)
-    xml.instruct! :xml, :version => "1.0"
-    xml.rss( :version => "2.0" ) {
-      xml.channel {
-        xml.title 'Spree Demo Site'
-        xml.link 'http://demo.spreehq.org/'
-        xml.description 'Spree Demo'
-        Product.find(:all).each do |product|  
-          xml.item {
-            xml.title product.name
-            xml.link 'http://demo.spreehq.org/products/' + product.permalink
-            xml.description product.description
-            xml.price product.master_price
-          }
-        end
-      }
-    }
-    #xml.urlset( :xmlns => "http://www.sitemaps.org/schemas/sitemap/0.9" ) {
-    #  Product.find(:all).each do |product|
-    #    xml.item {
-    #      xml.id product.sku.to_s
-    #      xml.condition 'New'
-    #      xml.product_type _get_product_type(product)
-    #      xml.image_link 'public_root' + product.images.first.attachment.url(:product)
+    xml = Builder::XmlMarkup.new(:target => output, :indent => 2, :margin => 1)
+    xml.channel {
+      xml.title 'Spree Demo Site'
+      xml.link 'http://demo.spreehq.org/'
+      xml.description 'Spree Demo'
+      Product.find(:all).each do |product|  
+        xml.item {
+          xml.title product.name
+          xml.link 'http://demo.spreehq.org/products/' + product.permalink
+          xml.description product.description
+          xml.price product.master_price
+          #xml.id product.sku.to_s
+          #xml.condition 'New'
+          #xml.product_type _get_product_type(product)
+          #xml.image_link 'public_root' + product.images.first.attachment.url(:product)
           #others: xml.brand, xml.isbn, xml.mpn, xml.upc, xml.weight, xml.color, xml.height, xml.length,
           #xml.payment_accepted, xml.payment_notes, xml.price_type, xml.quantity, xml.shipping, xml.size, xml.tax
-    #    }
-    #  end
-    #}
+        }
+      end
+    }
   end
 end
