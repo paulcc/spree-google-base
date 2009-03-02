@@ -34,7 +34,7 @@ namespace :spree do
       task :transfer => :environment do
         ftp = Net::FTP.new('uploads.google.com')
         ftp.login('', '')
-        ftp.put("#{SPREE_ROOT}/public/google_base.xml", 'google_base_test.xml')
+        ftp.put("#{SPREE_ROOT}/public/google_base.xml", 'google_base.xml')
         ftp.quit() 
       end
     end
@@ -53,8 +53,14 @@ def _get_product_type(product)
   product_type
 end
 
+def _get_brand(product)
+  'brand'
+  #TODO: Add Logic to get brand from taxonomy
+end
+
 def _filter_xml(output)
-  output.gsub('price', 'g:price')
+  #TODO: Loopify
+  output.gsub('price>', 'g:price>').gsub('brand>', 'g:brand>').gsub('condition>', 'g:condition>').gsub('image_link>', 'g:image_link>').gsub('product_type>', 'g:product_type>').gsub('id>', 'g:id>').gsub('quantity>', 'g:quantity>')
 end
   
 def _build_xml
@@ -66,16 +72,18 @@ def _build_xml
       xml.description 'Spree Demo'
       Product.find(:all).each do |product|  
         xml.item {
+          xml.id product.sku.to_s
           xml.title product.name
           xml.link 'http://demo.spreehq.org/products/' + product.permalink
           xml.description product.description
           xml.price product.master_price
-          #xml.id product.sku.to_s
-          #xml.condition 'New'
-          #xml.product_type _get_product_type(product)
-          #xml.image_link 'public_root' + product.images.first.attachment.url(:product)
-          #others: xml.brand, xml.isbn, xml.mpn, xml.upc, xml.weight, xml.color, xml.height, xml.length,
-          #xml.payment_accepted, xml.payment_notes, xml.price_type, xml.quantity, xml.shipping, xml.size, xml.tax
+          xml.brand _get_brand(product)
+          xml.condition 'new'
+          xml.image_link 'http://demo.spreehq.org/products' + product.images.first.attachment.url(:producti)
+          xml.product_type _get_product_type(product)
+          #TODO: xml.quantity
+          
+          #See http://base.google.com/support/bin/answer.py?answer=73932&hl=en for all other fields
         }
       end
     }
