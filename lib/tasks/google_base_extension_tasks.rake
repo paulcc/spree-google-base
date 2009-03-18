@@ -33,7 +33,7 @@ namespace :spree do
       end
       task :transfer => :environment do
         ftp = Net::FTP.new('uploads.google.com')
-        ftp.login('', '')
+        ftp.login(Spree::Config[:google_base_ftp_username], Spree::Config[:google_base_ftp_password])
         ftp.put("#{SPREE_ROOT}/public/google_base.xml", 'google_base.xml')
         ftp.quit() 
       end
@@ -45,7 +45,7 @@ def _get_product_type(product)
   product_type = ''
   priority = 1000
   product.taxons.each do |taxon|
-    if taxon.taxon_map.priority
+    if taxon.taxon_map && taxon.taxon_map.priority
       priority = taxon.taxon_map.priority
       product_type = taxon.taxon_map.product_type
     end
@@ -54,32 +54,32 @@ def _get_product_type(product)
 end
 
 def _get_brand(product)
-  'brand'
   #TODO: Add Logic to get brand from taxonomy
 end
 
 def _filter_xml(output)
-  #TODO: Loopify
+  #TODO: Clean up
   output.gsub('price>', 'g:price>').gsub('brand>', 'g:brand>').gsub('condition>', 'g:condition>').gsub('image_link>', 'g:image_link>').gsub('product_type>', 'g:product_type>').gsub('id>', 'g:id>').gsub('quantity>', 'g:quantity>')
 end
   
 def _build_xml
   returning '' do |output|
+    @public_dir = Spree::Config[:public_domain] || ''
     xml = Builder::XmlMarkup.new(:target => output, :indent => 2, :margin => 1)
     xml.channel {
-      xml.title 'Spree Demo Site'
-      xml.link 'http://demo.spreehq.org/'
-      xml.description 'Spree Demo'
+      xml.title Spree::Config[:google_base_title] || ''
+      xml.link @public_dir
+      xml.description Spree::Config[:google_base_desc] || ''
       Product.find(:all).each do |product|  
         xml.item {
           xml.id product.sku.to_s
           xml.title product.name
-          xml.link 'http://demo.spreehq.org/products/' + product.permalink
+          xml.link @public_dir + 'products/' + product.permalink
           xml.description product.description
           xml.price product.master_price
-          xml.brand _get_brand(product)
+          #xml.brand _get_brand(product)
           xml.condition 'new'
-          xml.image_link 'http://demo.spreehq.org/products' + product.images.first.attachment.url(:producti)
+          xml.image_link @public_dir + 'products/' + product.images.first.attachment.url(:producti)
           xml.product_type _get_product_type(product)
           #TODO: xml.quantity
           

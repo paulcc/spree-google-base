@@ -14,6 +14,14 @@ class GoogleBaseExtension < Spree::Extension
       end
     end
 
+    AppConfiguration.class_eval do
+      preference :google_base_title, :string, :default => 'Sand-Jar: Spree Demo'
+      preference :public_domain, :string, :default => 'http://www.sand-jar.com/'
+      preference :google_base_desc, :string, :default => 'Sand-Jar: Spree Demo'
+      preference :google_base_ftp_username, :string, :default => ''
+      preference :google_base_ftp_password, :string, :default => ''
+    end
+
     Taxon.class_eval do
       has_one :taxon_map
     end
