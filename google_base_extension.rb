@@ -15,9 +15,9 @@ class GoogleBaseExtension < Spree::Extension
     end
 
     AppConfiguration.class_eval do
-      preference :google_base_title, :string, :default => 'Sand-Jar: Spree Demo'
-      preference :public_domain, :string, :default => 'http://www.sand-jar.com/'
-      preference :google_base_desc, :string, :default => 'Sand-Jar: Spree Demo'
+      preference :google_base_title, :string, :default => ''
+      preference :public_domain, :string, :default => ''
+      preference :google_base_desc, :string, :default => ''
       preference :google_base_ftp_username, :string, :default => ''
       preference :google_base_ftp_password, :string, :default => ''
     end
