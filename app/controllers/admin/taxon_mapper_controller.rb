@@ -10,7 +10,6 @@ class Admin::TaxonMapperController < Admin::BaseController
         taxon.taxon_map = taxon_map
       end
     end
-@products = Product.find(:all)
   end
 
   def update
