@@ -22,7 +22,7 @@ INSTALLATION
 
 6. Edit SPREE_ROOT/vendor/extensions/google_base/google_base_extension.rb to set preferences for google base ftp username and password.
 
-7. Run rake spree:extensions:google_base:generate to generate feed. Verify feed exists (SPREE_ROOT/public/google_base.xml).
+7. Run rake google_base:generate to generate feed. Verify feed exists (SPREE_ROOT/public/google_base.xml).
 
 
 CRONJOBS
@@ -30,6 +30,6 @@ CRONJOBS
 
 There are two options to regulate google base product update:
 
-A) Setup cronjobs to run 'rake spree:extensions:google_base:generate' and 'rake spree:extensions:google_base:transfer'
+A) Setup cronjobs to run 'rake google_base:generate' and 'rake google_base:transfer'
 
-B) Setup cronjob to run 'rake spree:extensions:google_base:generate' and schedule the file to be uploaded via Google Base admin from public_domain/google_base.xml
+B) Setup cronjob to run 'rake google_base:generate' and schedule the file to be uploaded via Google Base admin from public_domain/google_base.xml
