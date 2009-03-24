@@ -1,7 +1,5 @@
 class Admin::TaxonMapperController < Admin::BaseController
   resource_controller
-  layout 'admin'
-  require_role :admin
 
   def index
     @taxons = Taxon.find(:all)
