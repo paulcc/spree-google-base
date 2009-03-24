@@ -14,14 +14,6 @@ class GoogleBaseExtension < Spree::Extension
       end
     end
 
-    AppConfiguration.class_eval do
-      preference :google_base_title, :string, :default => ''
-      preference :public_domain, :string, :default => ''
-      preference :google_base_desc, :string, :default => ''
-      preference :google_base_ftp_username, :string, :default => ''
-      preference :google_base_ftp_password, :string, :default => ''
-    end
-
     Taxon.class_eval do
       has_one :taxon_map
     end
