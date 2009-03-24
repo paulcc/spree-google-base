@@ -16,15 +16,13 @@ INSTALLATION
 
 3. Edit product_type, priorities in spree admin.
 
-4. Edit SPREE_ROOT/vendor/extensions/google_base/google_base_extension.rb to set preferences for the feed title, public domain, feed description.
+4. Edit SPREE_ROOT/vendor/extensions/google_base/lib/google_base_configuration.rb to set preferences for the feed title, public domain, feed description. FTP login is not required - you may schedule upload from the public directory.
 
-5. Create google base account. Create google base ftp account. Create data feed in google base with a type "Products" and name "google_base.xml".
+5. Create google base account. Create google base ftp account (if applicable). Create data feed in google base with a type "Products" and name "google_base.xml".
 
 6. Edit SPREE_ROOT/vendor/extensions/google_base/google_base_extension.rb to set preferences for google base ftp username and password.
 
 7. Run rake spree:extensions:google_base:generate to generate feed. Verify feed exists (SPREE_ROOT/public/google_base.xml).
-
-8. FTP file with 'rake spree:extensions:google_base:transfer'. Verify in Google Base that feed has been uploaded.
 
 
 CRONJOBS

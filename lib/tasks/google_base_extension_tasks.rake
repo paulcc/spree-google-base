@@ -60,17 +60,17 @@ def _build_xml
     xml = Builder::XmlMarkup.new(:target => output, :indent => 2, :margin => 1)
     xml.channel {
       xml.title Spree::GoogleBase::Config[:google_base_title] || ''
-      xml.link @public_dir
+      xml.link @public_dir + '/'
       xml.description Spree::GoogleBase::Config[:google_base_desc] || ''
       Product.find(:all, :include => [ :images, :taxons ]).each do |product|
         xml.item {
           xml.id product.sku.to_s
           xml.title product.name
-          xml.link @public_dir + 'products/' + product.permalink
-          xml.description product.description
+          xml.link @public_dir + '/products/' + product.permalink
+          xml.description CGI.escapeHTML(product.description)
           xml.price product.master_price
           xml.condition 'new'
-          xml.image_link @public_dir + 'products/' + product.images.first.attachment.url(:product) unless product.images.empty?
+          xml.image_link @public_dir + product.images.first.attachment.url(:product) unless product.images.empty?
           xml.product_type _get_product_type(product)
           #TODO: xml.quantity, xml.brand
           
