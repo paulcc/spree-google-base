@@ -50,8 +50,9 @@ def _get_product_type(product)
 end
 
 def _filter_xml(output)
-  #TODO: Clean up
-  output.gsub('price>', 'g:price>').gsub('brand>', 'g:brand>').gsub('condition>', 'g:condition>').gsub('image_link>', 'g:image_link>').gsub('product_type>', 'g:product_type>').gsub('id>', 'g:id>').gsub('quantity>', 'g:quantity>')
+  fields = ['price', 'brand', 'condition', 'image_link', 'product_type', 'id', 'quantity', 'mpn']
+  1.upto(fields.length - 1) { |i| output = output.gsub(fields[i] + '>', 'g:' + fields[i] + '>') }
+  output
 end
   
 def _build_xml
@@ -64,7 +65,8 @@ def _build_xml
       xml.description Spree::GoogleBase::Config[:google_base_desc] || ''
       Product.find(:all, :include => [ :images, :taxons ]).each do |product|
         xml.item {
-          xml.id product.sku.to_s
+          xml.id product.id.to_s
+          xml.mpn product.sku.to_s	#remove if the sku is not the same as the manufacturer's part number
           xml.title product.name
           xml.link @public_dir + 'products/' + product.permalink
           xml.description CGI.escapeHTML(product.description)

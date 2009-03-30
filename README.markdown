@@ -22,7 +22,9 @@ INSTALLATION
 
 4. Edit SPREE_ROOT/vendor/extensions/google_base/lib/google_base_configuration.rb to set preferences for the feed title, public domain, feed description, ftp login and password. FTP login is not required - you may schedule upload from the public directory.
 
-5. Run rake google_base:generate to generate feed. Verify feed exists (SPREE_ROOT/public/google_base.xml).
+5. Set RAILS_ENV to production
+
+6. Run rake google_base:generate to generate feed. Verify feed exists (SPREE_ROOT/public/google_base.xml).
 
 
 CRONJOBS
