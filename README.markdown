@@ -35,3 +35,7 @@ There are two options to regulate google base product update:
 A) Setup cronjobs to run 'rake google_base:generate' and 'rake google_base:transfer'
 
 B) Setup cronjob to run 'rake google_base:generate' and schedule the file to be uploaded via Google Base admin from public_domain/google_base.xml
+
+Refer to [spree: ruby on rails ecommerce][1] to learn more about spree.
+
+[1]: http://spreecommerce.com/
