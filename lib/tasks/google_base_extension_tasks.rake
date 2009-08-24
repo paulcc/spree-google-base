@@ -71,7 +71,7 @@ def _build_xml
           xml.title product.name
           xml.link @public_dir + 'products/' + product.permalink
           xml.description CGI.escapeHTML(product.description)
-          xml.price product.master_price
+          xml.price (product.master_price.to_s + ' ' + Spree::GoogleBase::Config[:google_base_currency_code])
           xml.condition 'new'
           xml.image_link @public_dir.sub(/\/$/, '') + product.images.first.attachment.url(:product) unless product.images.empty?
           xml.product_type _get_product_type(product)

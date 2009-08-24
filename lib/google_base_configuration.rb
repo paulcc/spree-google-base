@@ -4,4 +4,5 @@ class GoogleBaseConfiguration < Configuration
   preference :google_base_desc, :string, :default => 'My Description'
   preference :google_base_ftp_username, :string, :default => ''
   preference :google_base_ftp_password, :string, :default => ''
+  preference :google_base_currency_code, :string, :default => ''
 end
