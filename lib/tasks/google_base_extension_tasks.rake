@@ -50,8 +50,8 @@ def _get_product_type(product)
 end
 
 def _filter_xml(output)
-  ['price', 'brand', 'condition', 'image_link', 'product_type', 'id', 'quantity', 'mpn'].each |field|
-    output.gsub!(field + '>', 'g:' + field + '>') }
+  ['price', 'brand', 'condition', 'image_link', 'product_type', 'id', 'quantity', 'mpn'].each do |field|
+    output.gsub!(field + '>', 'g:' + field + '>') 
   end
   output
 end
